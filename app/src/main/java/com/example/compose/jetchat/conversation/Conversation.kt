@@ -389,7 +389,7 @@ private fun AuthorNameTimestamp(msg: Message) {
     Row(modifier = Modifier.semantics(mergeDescendants = true) {}) {
         Text(
             text = msg.author,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.subtitle1.copy(Color.Black),
             modifier = Modifier
                 .alignBy(LastBaseline)
                 .paddingFrom(LastBaseline, after = 8.dp) // Space to 1st bubble
@@ -398,7 +398,7 @@ private fun AuthorNameTimestamp(msg: Message) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
                 text = msg.timestamp,
-                style = MaterialTheme.typography.caption,
+                style = MaterialTheme.typography.caption.copy(Color.Black),
                 modifier = Modifier.alignBy(LastBaseline)
             )
         }

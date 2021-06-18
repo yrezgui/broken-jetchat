@@ -31,3 +31,14 @@ out the bug
 
 **Solution**
 Inside `Messages`, move `JumpToBottom` below `LazyColumn`.
+
+#### Different Mode
+Have you tried the dark mode on this screen? Could you spot the difference and fix it?
+
+**Hint**
+Isolate building blocks by filtering out piece by piece the UI elements of the screen in the Layout 
+Inspector, starting from the background to make dark elements more visible
+
+**Solution**
+In `AuthorNameTimestamp`, both `Text` elements are using `Color.Black` instead of depending on the 
+MaterialTheme (which changes based on the light/dark mode). Remove the color attribute.
