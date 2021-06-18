@@ -115,7 +115,7 @@ fun ConversationContent(
 
     var isLoading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         delay(3000L)
         isLoading = false
     }
