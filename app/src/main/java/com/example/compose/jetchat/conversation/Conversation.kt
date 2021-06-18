@@ -239,6 +239,31 @@ fun Messages(
 ) {
     val scope = rememberCoroutineScope()
     Box(modifier = modifier) {
+        // Jump to bottom button shows up when user scrolls past a threshold.
+        // Convert to pixels:
+        val jumpThreshold = with(LocalDensity.current) {
+            JumpToBottomThreshold.toPx()
+        }
+
+        // Show the button if the first visible item is not the first one or if the offset is
+        // greater than the threshold.
+        val jumpToBottomButtonEnabled by remember {
+            derivedStateOf {
+                scrollState.firstVisibleItemIndex != 0 ||
+                        scrollState.firstVisibleItemScrollOffset > jumpThreshold
+            }
+        }
+
+        JumpToBottom(
+            // Only show if the scroller is not at the bottom
+            enabled = jumpToBottomButtonEnabled,
+            onClicked = {
+                scope.launch {
+                    scrollState.animateScrollToItem(0)
+                }
+            },
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
 
         val authorMe = stringResource(id = R.string.author_me)
         LazyColumn(
@@ -284,31 +309,7 @@ fun Messages(
                 }
             }
         }
-        // Jump to bottom button shows up when user scrolls past a threshold.
-        // Convert to pixels:
-        val jumpThreshold = with(LocalDensity.current) {
-            JumpToBottomThreshold.toPx()
-        }
 
-        // Show the button if the first visible item is not the first one or if the offset is
-        // greater than the threshold.
-        val jumpToBottomButtonEnabled by remember {
-            derivedStateOf {
-                scrollState.firstVisibleItemIndex != 0 ||
-                    scrollState.firstVisibleItemScrollOffset > jumpThreshold
-            }
-        }
-
-        JumpToBottom(
-            // Only show if the scroller is not at the bottom
-            enabled = jumpToBottomButtonEnabled,
-            onClicked = {
-                scope.launch {
-                    scrollState.animateScrollToItem(0)
-                }
-            },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
     }
 }
 

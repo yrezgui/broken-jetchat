@@ -21,3 +21,13 @@ Inspector to verify if it's still there.
 **Solution**
 Inside `ConversationContent`, `ChannelNameBar` should be placed after 
 `Column(Modifier.fillMaxSize())` containing `Messages`.
+
+#### Overlapping jump to bottom button
+When scrolling the list of messages, a jump to bottom button appears but it's not very visible.
+
+**Hint**
+The messages list page content is overlapping the jump to bottom button. Use the 3D view to figure 
+out the bug
+
+**Solution**
+Inside `Messages`, move `JumpToBottom` below `LazyColumn`.
