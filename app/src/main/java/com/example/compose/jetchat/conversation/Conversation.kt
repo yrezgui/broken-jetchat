@@ -107,12 +107,6 @@ fun ConversationContent(
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    println(authorMe)
-    println(timeNow)
-    println(scrollState)
-    println(scope)
-    println(navigateToProfile)
-
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
