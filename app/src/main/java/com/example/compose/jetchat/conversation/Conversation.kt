@@ -20,6 +20,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -50,6 +52,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -80,6 +83,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsPadding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -103,31 +107,31 @@ fun ConversationContent(
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
+    println(authorMe)
+    println(timeNow)
+    println(scrollState)
+    println(scope)
+    println(navigateToProfile)
+
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(true) {
+        delay(3000L)
+        isLoading = false
+    }
+
     Surface(modifier = modifier) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(Modifier.fillMaxSize()) {
-                Messages(
-                    messages = uiState.messages,
-                    navigateToProfile = navigateToProfile,
-                    modifier = Modifier.weight(1f),
-                    scrollState = scrollState
-                )
-                UserInput(
-                    onMessageSent = { content ->
-                        uiState.addMessage(
-                            Message(authorMe, content, timeNow)
-                        )
-                    },
-                    resetScroll = {
-                        scope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    },
-                    // Use navigationBarsWithImePadding(), to move the input panel above both the
-                    // navigation bar, and on-screen keyboard (IME)
-                    modifier = Modifier.navigationBarsWithImePadding(),
-                )
+            if (isLoading) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                }
             }
+
             // Channel name bar floats above the messages
             ChannelNameBar(
                 channelName = uiState.channelName,
@@ -136,6 +140,32 @@ fun ConversationContent(
                 // Use statusBarsPadding() to move the app bar content below the status bar
                 modifier = Modifier.statusBarsPadding(),
             )
+
+            if (!isLoading) {
+                Column(Modifier.fillMaxSize()) {
+                    Messages(
+                        messages = uiState.messages,
+                        navigateToProfile = navigateToProfile,
+                        modifier = Modifier.weight(1f),
+                        scrollState = scrollState
+                    )
+                    UserInput(
+                        onMessageSent = { content ->
+                            uiState.addMessage(
+                                Message(authorMe, content, timeNow)
+                            )
+                        },
+                        resetScroll = {
+                            scope.launch {
+                                scrollState.scrollToItem(0)
+                            }
+                        },
+                        // Use navigationBarsWithImePadding(), to move the input panel above both the
+                        // navigation bar, and on-screen keyboard (IME)
+                        modifier = Modifier.navigationBarsWithImePadding(),
+                    )
+                }
+            }
         }
     }
 }
