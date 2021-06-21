@@ -86,12 +86,12 @@ fun ProfileScreen(userData: ProfileScreenState, onNavIconPressed: () -> Unit = {
 
     val scrollState = rememberScrollState()
 
-    var flashingCondition by remember { mutableStateOf(false) }
+    var flashingCondition by remember { mutableStateOf(Instant.now().epochSecond) }
 
     LaunchedEffect(Unit) {
         while(true) {
             println("Checking timestamp ...")
-            flashingCondition = Instant.now().epochSecond % 10 == 0L
+            flashingCondition = Instant.now().epochSecond
             delay(100L)
         }
     }
@@ -137,7 +137,7 @@ fun ProfileScreen(userData: ProfileScreenState, onNavIconPressed: () -> Unit = {
                 ProfileFab(
                     extended = scrollState.value == 0,
                     userIsMe = userData.isMe(),
-                    modifier = Modifier.align(Alignment.BottomEnd).background(if (it) Color.Blue else Color.Red),
+                    modifier = Modifier.align(Alignment.BottomEnd).background(if (it % 10 == 0L) Color.Blue else Color.Red),
                     onFabClicked = { functionalityNotAvailablePopupShown = true }
                 )
             }
